@@ -9,6 +9,7 @@ venv/
 *env/
 
 # Temporary file
+tmp/
 *.tmp
 *.log
 *.bak
