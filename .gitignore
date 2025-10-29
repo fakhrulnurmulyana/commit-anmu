@@ -13,6 +13,7 @@ venv/
 *.log
 *.bak
 *.swp
+tmp*
 
 # OS generate files
 .DS_Store
