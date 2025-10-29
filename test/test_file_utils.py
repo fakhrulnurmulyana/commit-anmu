@@ -16,7 +16,10 @@ Key aspects tested:
 
 import os
 import logging
+from tempfile import gettempdir
 
+from pathlib import Path
+import tempfile
 import pytest
 from src.anmu_buddy.file_utils import create_temp_file, delete_file
 
@@ -64,25 +67,25 @@ def test_create_temp_file_invalid_suffix(bad_suffix):
 def test_delete_file_normal(tmp_path):
     """Test that delete_file correctly removes a file in the system temp directory."""
     temp_file = tmp_path / "testfile.txt"
-    temp_file.write_text("hello")  # Fixed typo: write_txt -> write_text
+    temp_file.write_text("hello") 
 
-    system_temp_file = os.path.join(tmp_path.gettempdir(), temp_file.name)
+    system_temp_file = os.path.join(gettempdir(), temp_file.name)
     os.rename(temp_file, system_temp_file)
 
     delete_file(system_temp_file)
     assert not os.path.exists(system_temp_file)
 
 
-def test_delete_file_blocks_non_temp_file(tmp_path, caplog):
+def test_delete_file_blocks_non_temp_file(caplog):
     """Verify delete_file does not remove files outside the system temp directory and logs a warning."""
-    file_path = tmp_path / "outside_temp.txt"
+    file_path = Path(tempfile.NamedTemporaryFile(delete=False, dir=".").name)
     file_path.write_text("hello")
 
     with caplog.at_level(logging.WARNING):
         delete_file(str(file_path))
         assert os.path.exists(file_path)
         assert any("Deletion blocked for non-temporary file" in msg for msg in caplog.messages)
-
+        
 
 def test_delete_file_no_error_if_not_exist(tmp_path):
     """Ensure delete_file does not raise an error if the target file does not exist."""
@@ -99,13 +102,13 @@ def test_delete_file_handles_oserror(monkeypatch, tmp_path, caplog):
     """Test that delete_file logs a warning instead of raising when os.remove raises OSError."""
     temp_file = tmp_path / "tempfile.txt"
     temp_file.write_text("hello")
-    system_temp_file = os.path.join(tmp_path.gettempdir(), temp_file.name)
+    system_temp_file = Path(tempfile.mktemp(suffix=".txt"))
     os.rename(temp_file, system_temp_file)
 
     # Simulate OSError on os.remove
     def fake_remove(path):
         raise OSError("forced error")
-    monkeypatch.setattr("os.remove", fake_remove)  # Fixed typo: setsttr -> setattr
+    monkeypatch.setattr(os, "remove", fake_remove)  # Fixed typo: setsttr -> setattr
 
     with caplog.at_level(logging.WARNING):
         delete_file(system_temp_file)
