@@ -78,7 +78,7 @@ def test_delete_file_normal(tmp_path):
 
 def test_delete_file_blocks_non_temp_file(caplog):
     """Verify delete_file does not remove files outside the system temp directory and logs a warning."""
-    file_path = Path(tempfile.NamedTemporaryFile(delete=False, dir=".").name)
+    file_path = Path(tempfile.NamedTemporaryFile(delete=False, dir="tmp").name)
     file_path.write_text("hello")
 
     with caplog.at_level(logging.WARNING):
