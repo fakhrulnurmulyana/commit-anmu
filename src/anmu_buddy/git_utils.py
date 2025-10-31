@@ -1,5 +1,6 @@
 import subprocess
 from pathlib import Path
+from typing import Union, List
 
 class GitAutomation:
     """
@@ -67,7 +68,7 @@ class GitAutomation:
                 f"Git command failed: {' '.join(command)}\nError: {error_msg}"
             ) from e
         
-    def _add(self, files: str | list[str] | tuple[str, ...])-> None:
+    def _add(self, files: Union[str, List[str], tuple[str, ...]])-> None:
         """
         Stage files for commit.
 
@@ -98,7 +99,7 @@ class GitAutomation:
         print(f"Committing changes using message from: {message_file}")
         self._run(["git", "commit", "-F", message_path.as_posix()])
 
-    def _push(self, remote: str = "origin", branch: str | None = None)-> None:
+    def _push(self, remote: str= "origin", branch: Union[str, None]= None)-> None:
         """
         Push committed changes to a remote branch.
 
@@ -112,7 +113,7 @@ class GitAutomation:
         print(f"Pushing changes to {remote}/{branch}")
         self._run(["git", "push", remote, branch])
     
-    def commit_change(self, files: str | list[str] | tuple[str, ...], message_file:str)-> None:
+    def commit_change(self, files: Union[str, List[str], tuple[str, ...]], message_file:str)-> None:
         """
         Stage and commit files locally.
 
@@ -126,7 +127,7 @@ class GitAutomation:
 
     def sync_change(
             self, 
-            files: str | list[str] | tuple[str, ...], 
+            files: Union[str, List[str], tuple[str, ...]], 
             message_file:str, 
             remote:str="origin", 
             branch:str=None,
