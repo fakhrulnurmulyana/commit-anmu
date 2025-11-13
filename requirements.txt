@@ -1,1 +1,2 @@
-# No external dependencies required
+# Pytest
+pytest==8.4.2
