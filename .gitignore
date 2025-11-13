@@ -37,3 +37,10 @@ dist/
 
 # pytest cache
 .pytest_cache/
+
+# Ignore test and config directories
+# These directories are currently excluded because:
+# - config/ is not yet populated with configuration files.
+# - test/ is temporarily excluded until the testing structure is established.
+test/
+config/
