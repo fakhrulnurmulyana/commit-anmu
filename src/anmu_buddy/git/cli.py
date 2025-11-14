@@ -1,15 +1,23 @@
 import typer
 from .service import GitService
-from typing import List
+from typing import List, Annotated
 
 app = typer.Typer(help="Git automation commands for AnmuBuddy.")
 service = GitService()
 
 @app.command()
-def commit(files: List[str], message_file:str):
+def commit(
+        files: Annotated[
+            List[str],
+            typer.Option(
+                "--files", "-f",
+                help="List of files to commit."
+            )
+        ]
+    ):
     """Commit change to the repository."""
     try:
-        service.commit(files= files, message_file= message_file)
+        service.commit(files= files)
         typer.echo("Commit completed successfully.")
     except Exception as e:
         typer.echo(f"Commit failed: {e}", err=True)
@@ -17,9 +25,26 @@ def commit(files: List[str], message_file:str):
 
 @app.command()
 def push(
-        files: List[str], 
-        remote:str="origin", 
-        branch:str=None,
+        files: Annotated[
+            List[str],
+            typer.Option(
+                "--files", "-f",
+                help="List of files to push."
+            )
+        ], 
+        remote:Annotated[
+            str,
+            typer.Option(
+                "--remote", "-r",
+                help="Remote name."
+            )
+        ]="origin", 
+        branch:Annotated[
+            str,
+            typer.Option(
+                "--branch", "-b",
+                help="Branch name to push to. Optional; uses the current branch when omitted."
+            )]=None,
     ):
     """Commit and push change to the repository."""
     try:
