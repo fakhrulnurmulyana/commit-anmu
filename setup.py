@@ -22,12 +22,12 @@ setup(
     # External dependencies required by this package
     install_requires=["typer"],
 
-    python_requires=">=3.9.24",
+    python_requires=">=3.9",
 
     # Register CLI entry point for Typer app
     entry_points={
         "console_scripts": [
-            "anmu_buddy=anmu_buddy.cli:app"
+            "anmubuddy=anmu_buddy.cli:app"
         ]
     },
 )
