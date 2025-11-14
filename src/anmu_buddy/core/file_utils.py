@@ -1,23 +1,25 @@
 import logging
 import os
 import tempfile
+import sys
+import subprocess
 
-def create_temp_file(suffix=".txt")->str:
+def _create_temp_file(suffix=".txt")->str:
     """
-    Create a temporary file and return its file path
+    Create a temporary file and return its absolute file path.
 
-    The file is created in the system's temporary using Python's
-    built-in 'tempfile' module. It is closed immediately to allow access by
-    external processes or tools
+    The file is created in the system's temporary directory using Python's
+    built-in 'tempfile' module. It is immediately closed so external processes
+    or tools can access it.
 
     Args:
         suffix (str): File extension for the temporary file (default: ".txt").
 
-    Returns :
+    Returns:
         str: Absolute path to the created temporary file.
 
     Raises:
-        ValueError: If the given suffix is invalid.
+        ValueError: If the suffix is invalid.
         OSError: If the temporary file cannot be created.
     """
     if not suffix.startswith(".") or "/" in suffix or "\\" in suffix:
@@ -26,6 +28,34 @@ def create_temp_file(suffix=".txt")->str:
     tmp = tempfile.NamedTemporaryFile(suffix=suffix, delete=False)
     tmp.close() # Close to allow other processes to access the file
     return tmp.name
+
+def open_temp_file_for_editing(suffix=".txt", editor=None) -> str:
+    """
+    Create a temporary file, open it in a text editor, wait until closed,
+    then return the content of the file.
+
+    Args:
+        suffix (str): File extension for the temp file (default: ".txt").
+        editor (str | None): Costume editor to use, If None, auto-detect.
+
+    Returns:
+        str: Path to the temporary file that the user edited.
+    """
+    path = _create_temp_file(suffix)
+
+    # Determine editor
+    if not editor:
+        # Fallback per os
+        editor = os.getenv("EDITOR")
+        if not editor:
+            if sys.platform.startswith("win"):
+                editor = "notepad"
+            else:
+                editor = "nano"
+
+    subprocess.call([editor, path])
+
+    return path
 
 def delete_file(path)->None:
     """
