@@ -2,6 +2,13 @@ import subprocess
 from pathlib import Path
 from typing import Union, List
 
+from .input_helper import ask_until_valid
+from .validator import (
+    is_valid_email,
+    is_valid_remote_url,
+    is_valid_username,
+)
+
 class GitAutomation:
     """
     Utility class to automate basic Git operations such as add, commit, and push.
@@ -106,6 +113,38 @@ class GitAutomation:
         print(f"Committing changes using message from: {message_file}")
         self._run(["git", "commit", "-F", message_path.as_posix()])
 
+    def _validate_git_environment(self) -> dict:
+        return {
+            "remote": self._run(["git", "remote", "-v"]).stdout.strip(),
+            "username": self._run(["git", "config", "user.name"]).stdout.strip(),
+            "email": self._run(["git", "config", "user.email"]).stdout.strip(),
+        }
+    
+    def _setup_missing_git_config(self, env: dict) -> None:
+        if not env["remote"]:
+            remote_url = ask_until_valid(
+                "No remote repo found. please input remote URL: ",
+                is_valid_remote_url,
+                "URL not valid"
+            )
+            self._run(["git", "remote", "add", "origin", remote_url])
+        
+        if not env["username"]:
+            name = ask_until_valid(
+                "Your git username is not set. Input Username: ",
+                is_valid_username,
+                "Username can't be empty."
+            )
+            self._run(["git", "config", "--global", "user.name", name])
+
+        if not env["email"]:
+            email = ask_until_valid(
+                "Your git email is not set. Input email: ",
+                is_valid_email,
+                "Email format is not valid."
+            )
+            self._run(["git", "config", "--global", "user.email", email])
+
     def _push(self, remote: str= "origin", branch: Union[str, None]= None)-> None:
         """
         Push committed changes to a remote branch.
@@ -117,6 +156,9 @@ class GitAutomation:
         if branch is None:
             branch = self.current_branch
 
+        git_env = self._validate_git_environment()
+        self._setup_missing_git_config(git_env)
+        
         print(f"Pushing changes to {remote}/{branch}")
         self._run(["git", "push", remote, branch])
     
@@ -148,8 +190,6 @@ class GitAutomation:
             remote (str): Remote name (default: 'origin').
             branch (str | None): Branch name (default: current branch).
         """
-        if branch is None:
-            branch = self.current_branch
         self.commit_change(files, message_file)
         self._push(remote, branch)
         print(f"Changes synced branch {branch} with remote branch successfully")
