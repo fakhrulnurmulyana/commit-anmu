@@ -44,3 +44,5 @@ dist/
 # - test/ is temporarily excluded until the testing structure is established.
 test/
 config/
+# - pytest.ini is not yet populated with configuration files.
+pytest.ini
