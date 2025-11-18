@@ -1,7 +1,7 @@
 <div align="center">
     
-# Anmu-Buddy 
-
+<img width="200" alt="Image" src="https://github.com/user-attachments/assets/af71c735-4c3b-487e-a53d-0afc30b2c0bf" />
+    
 </div>
 
 ## About
@@ -121,5 +121,6 @@ anmubuddy git push -f file1_to_commit -f file2_to_commit
 
 ## 📄 License
 This project is licensed under the MIT License — see the `LICENSE` file for details.
+
 
 
