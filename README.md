@@ -7,23 +7,48 @@
 </div>
 
 ## About
-A personal Git helper that lets you write commit messages in Notepad — no manual `git add` or `git commit` required.
-
-## Why Anmu-Buddy Exists
-Because writing commit messages in the terminal is annoying.  
-Anmu-Buddy lets you type commit messages comfortably in Notepad.
+Anmu-Buddy is a lightweight Git helper tool that automates staging, committing, and pushing — using Notepad as your commit message editor.
+It is designed for developers who prefer writing commit messages comfortably in a text editor instead of the terminal.
 
 ## Requirements
 - Python 3.9+
 - Git installed and available in PATH
 
-## Main Features
-- Staging + commit  
-- Staging + commit + push
+## Features
+- Write commit messages in Notepad automatically
+- Auto-stage files after saving Notepad
+- Support for multiple files
+- Combined staging + commit + push
+- Clean CLI commands (anmubuddy git ...)
 
+## Why Not Just Use Git Normally?
+- Git already works well, but Anmu-Buddy focuses on simplifying repetitive workflows.
+- Perfect for users who:
+- dislike writing commit messages in the terminal
+- prefer full-screen editing
+- want faster commit cycles
+- often forget to run multiple commands
+
+## How it works
+1. You run the command
+2. Notepad opens with a temporary file
+3. You write your commit message
+4. When you save & close Notepad → the tool automatically:
+    - stages the specified files
+    - commits with your message
+    - optionally pushes (if using git push)
+
+## Roadmap
+- [ ] Add template-based commit messages
+- [ ] Auto-check Git username/email
+- [ ] Confirmation prompts before committing/pushing
+- [ ] Al-generated commit message (optional future)
+- [ ] Refactor codebase
+- [ ] Better error handling
+    
 ## Project Structure
 ```bash
-ANMU_BUDDY/
+anmu_buddy/
 ├── src/
 │   └── anmu_buddy/
 │       ├── core/
@@ -43,7 +68,7 @@ ANMU_BUDDY/
 └── setup.py
 ````
 
-## 🚀 Installation
+## Installation
 
 Clone the repository:
 
@@ -97,3 +122,4 @@ anmubuddy git push -f file1_to_commit -f file2_to_commit
 
 ## 📄 License
 This project is licensed under the MIT License — see the `LICENSE` file for details.
+
