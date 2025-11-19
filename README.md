@@ -28,7 +28,7 @@ It is designed for developers who prefer writing commit messages comfortably in 
 - often forget to run multiple commands
 
 ## How it works
-![Image](https://github.com/user-attachments/assets/a5161a52-6758-485e-8f2e-85e9095f5b07)
+![Image](https://github.com/user-attachments/assets/6c7e9975-895f-42d5-b055-0c8651e3c6cd)
 1. You run the command
 2. Notepad opens with a temporary file
 3. You write your commit message
@@ -121,6 +121,7 @@ anmubuddy git push -f file1_to_commit -f file2_to_commit
 
 ## 📄 License
 This project is licensed under the MIT License — see the `LICENSE` file for details.
+
 
 
 
